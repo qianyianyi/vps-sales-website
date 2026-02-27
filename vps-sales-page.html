@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>云服务器 VPS 售卖平台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* 头部样式 */
+        header {
+            text-align: center;
+            padding: 40px 0;
+            color: white;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* VPS套餐网格 */
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .plan-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .plan-card.popular {
+            border: 3px solid #ff6b6b;
+            transform: scale(1.05);
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: 15px;
+            right: -30px;
+            background: #ff6b6b;
+            color: white;
+            padding: 5px 40px;
+            transform: rotate(45deg);
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .plan-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .plan-price {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .plan-price span {
+            font-size: 1rem;
+            color: #666;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin-bottom: 25px;
+        }
+
+        .plan-features li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+        }
+
+        .plan-features li:before {
+            content: "✓";
+            color: #4CAF50;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .buy-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .buy-btn:hover {
+            background: linear-gradient(135deg, #764ba2, #667eea);
+            transform: scale(1.05);
+        }
+
+        /* 功能特色区域 */
+        .features {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 40px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .features h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .feature {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+
+        .feature h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+            
+            .plan-card.popular {
+                transform: none;
+            }
+            
+            .plans-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* 购物车通知 */
+        .cart-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .cart-notification.show {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 云服务器 VPS</h1>
+            <p>高性能、稳定可靠的云服务器解决方案</p>
+        </header>
+
+        <div class="plans-grid">
+            <!-- 基础套餐 -->
+            <div class="plan-card">
+                <div class="plan-name">基础型</div>
+                <div class="plan-price">¥29<span>/月</span></div>
+                <ul class="plan-features">
+                    <li>1 vCPU 核心</li>
+                    <li>2GB 内存</li>
+                    <li>40GB SSD 存储</li>
+                    <li>1TB 月流量</li>
+                    <li>100Mbps 带宽</li>
+                    <li>Ubuntu/CentOS 系统</li>
+                </ul>
+                <button class="buy-btn" onclick="addToCart('基础型', 29)">立即购买</button>
+            </div>
+
+            <!-- 标准套餐（热门） -->
+            <div class="plan-card popular">
+                <div class="popular-badge">热门</div>
+                <div class="plan-name">标准型</div>
+                <div class="plan-price">¥59<span>/月</span></div>
+                <ul class="plan-features">
+                    <li>2 vCPU 核心</li>
+                    <li>4GB 内存</li>
+                    <li>80GB SSD 存储</li>
+                    <li>2TB 月流量</li>
+                    <li>200Mbps 带宽</li>
+                    <li>多系统支持</li>
+                    <li>24/7 技术支持</li>
+                </ul>
+                <button class="buy-btn" onclick="addToCart('标准型', 59)">立即购买</button>
+            </div>
+
+            <!-- 高级套餐 -->
+            <div class="plan-card">
+                <div class="plan-name">高级型</div>
+                <div class="plan-price">¥99<span>/月</span></div>
+                <ul class="plan-features">
+                    <li>4 vCPU 核心</li>
+                    <li>8GB 内存</li>
+                    <li>160GB SSD 存储</li>
+                    <li>5TB 月流量</li>
+                    <li>500Mbps 带宽</li>
+                    <li>全系统支持</li>
+                    <li>优先技术支持</li>
+                    <li>免费备份服务</li>
+                </ul>
+                <button class="buy-btn" onclick="addToCart('高级型', 99)">立即购买</button>
+            </div>
+
+            <!-- 企业套餐 -->
+            <div class="plan-card">
+                <div class="plan-name">企业型</div>
+                <div class="plan-price">¥199<span>/月</span></div>
+                <ul class="plan-features">
+                    <li>8 vCPU 核心</li>
+                    <li>16GB 内存</li>
+                    <li>320GB SSD 存储</li>
+                    <li>10TB 月流量</li>
+                    <li>1Gbps 带宽</li>
+                    <li>全系统支持</li>
+                    <li>专属技术支持</li>
+                    <li>自动备份 & 快照</li>
+                    <li>负载均衡支持</li>
+                </ul>
+                <button class="buy-btn" onclick="addToCart('企业型', 199)">立即购买</button>
+            </div>
+        </div>
+
+        <div class="features">
+            <h2>🌟 我们的特色服务</h2>
+            <div class="features-grid">
+                <div class="feature">
+                    <div class="feature-icon">⚡</div>
+                    <h3>高性能硬件</h3>
+                    <p>采用最新一代Intel/AMD处理器，NVMe SSD存储</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🛡️</div>
+                    <h3>安全保障</h3>
+                    <p>DDoS防护、防火墙、定期安全更新</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🔧</div>
+                    <h3>专业技术支持</h3>
+                    <p>7x24小时在线技术支持，快速响应</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">📊</div>
+                    <h3>实时监控</h3>
+                    <p>完整的性能监控和资源使用统计</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cart-notification" id="cartNotification">
+        已添加到购物车！
+    </div>
+
+    <script>
+        function addToCart(planName, price) {
+            // 显示购物车通知
+            const notification = document.getElementById('cartNotification');
+            notification.textContent = `已选择: ${planName} - ¥${price}/月`;
+            notification.classList.add('show');
+            
+            // 3秒后隐藏通知
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+
+            // 在实际应用中，这里应该连接到支付系统
+            console.log(`用户选择了: ${planName}, 价格: ¥${price}`);
+            
+            // 模拟跳转到支付页面
+            // window.location.href = `/checkout?plan=${encodeURIComponent(planName)}&price=${price}`;
+        }
+
+        // 页面加载动画
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.plan-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+        });
+    </script>
+</body>
+</html>
