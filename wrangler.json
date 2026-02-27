@@ -1,0 +1,11 @@
+{
+  "name": "vps-sales-website",
+  "compatibility_date": "2026-02-27",
+  "build": {
+    "command": "echo 'No build required for static site'",
+    "publish": "."
+  },
+  "env": {
+    "NODE_VERSION": "20"
+  }
+}

@@ -1,0 +1,28 @@
+# Cloudflare Pages Configuration
+
+## Build Configuration
+framework: none
+
+## Build Command
+build_command: ""
+
+## Publish Directory
+publish: "."
+
+## Environment Variables
+[env]
+  NODE_VERSION = "20"
+
+## Custom Domains (Optional)
+# [[redirects]]
+#   from = "https://vps.yourdomain.com/*"
+#   to = "https://your-project.pages.dev/:splat"
+#   status = 301
+
+## Headers for Security
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

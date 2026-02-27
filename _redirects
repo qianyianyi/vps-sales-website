@@ -1,0 +1,18 @@
+# Cloudflare Pages Build Configuration
+
+# 这是一个静态网站，不需要构建过程
+# 直接部署HTML/CSS/JS文件
+
+# 部署分支
+branch: master
+
+# 构建命令（空，因为是静态文件）
+build:
+  command: ""
+
+# 发布目录
+publish: "."
+
+# 环境变量（可选）
+env:
+  NODE_VERSION: 20
